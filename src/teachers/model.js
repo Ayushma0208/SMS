@@ -34,7 +34,7 @@ export const  teacherUpdate = async(id,fullname,phone,address,subject,qualificat
 }
 
 export const teacherDelete = async (id) => {
-  const query = `DELETE FROM tbl_students WHERE id = $1`;
+  const query = `DELETE FROM tbl_teachers WHERE id = $1`;
   const values = [id];
   return db.query(query, values); 
 };
