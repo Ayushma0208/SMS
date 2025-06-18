@@ -11,6 +11,6 @@ app.post('/login',verifyToken,authorizeRoles("admin","teacher"),login)
 
 app.post('/update-student',verifyToken,authorizeRoles("admin","teacher"),update)
 
-app.delete('/deleteStudent',deleteStudent)
+app.delete('/deleteStudent',verifyToken,authorizeRoles("teacher"),deleteStudent)
 
 export default app;
