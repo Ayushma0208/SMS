@@ -65,3 +65,11 @@ export const studentDelete = async (id) => {
   const values = [id];
   return db.query(query, values); 
 };
+
+export const getAllStudents = async() =>{
+  return db.query(`SELECT * FROM tbl_students`)
+}
+
+export const getstudentById = async (id) => {
+  return db.query('SELECT * FROM tbl_students WHERE id = $1', [id]);
+};

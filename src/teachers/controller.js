@@ -1,5 +1,5 @@
 import argon2  from 'argon2';
-import { createTeacher, isTeacherExist, teacherDelete, teacherLogin, teacherUpdate } from "./model.js";
+import { createTeacher, getAllTeacher, isTeacherExist, teacherDelete, teacherLogin, teacherUpdate } from "./model.js";
 import { generateToken } from '../middleware/auth.js';
 
 export const signupTeacher = async(req,res) =>{
@@ -72,4 +72,9 @@ export const deleteTeacher = async(req,res) =>{
         return res.status(404).json({ message: "Student not found" });
       }
          return res.status(200).json({ message: "Teacher deleted successfully" });
+}
+
+export const getAllTeachers = async(req,res) =>{
+  const data = await getAllTeacher();
+  res.status(200).json(data.rows)
 }
