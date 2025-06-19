@@ -1,6 +1,6 @@
 import argon2  from 'argon2';
 import { generateToken } from "../middleware/auth.js";
-import { createUser, isUserExist, studentDelete, updateStudent } from "./model.js";
+import { createUser, getAllStudents, getstudentById, isUserExist, studentDelete, updateStudent } from "./model.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -89,4 +89,25 @@ export const deleteStudent = async(req,res) =>{
         console.error(error);
     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
     }
+}
+
+export const getAllStudent = async(req,res) =>{
+  try{
+  const data = await getAllStudents()
+  res.status(200).json(data.rows);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export const getStudentById = async(req,res) =>{
+  try {
+    const id = req.query.id
+    const data =await getstudentById(id);
+    res.status(200).json(data.rows);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }

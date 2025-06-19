@@ -38,3 +38,7 @@ export const teacherDelete = async (id) => {
   const values = [id];
   return db.query(query, values); 
 };
+
+export const getAllTeacher = async() =>{
+  return db.query(`SELECT * FROM tbl_teachers`)
+}
