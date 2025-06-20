@@ -3,6 +3,7 @@ import adminRoutes from './admin/router.js'
 import teacherRoutes from './teachers/router.js'
 import studentRoutes from './students/router.js'
 import subjectRoutes from './subjects/router.js'
+import classRoutes from './class/router.js'
 
 const router = express.Router();
 
@@ -13,5 +14,7 @@ router.use('/teacher',teacherRoutes)
 router.use('/student',studentRoutes)
 
 router.use('/subject',subjectRoutes)
+
+router.use('/class',classRoutes)
 
 export default router;
