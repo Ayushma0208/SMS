@@ -2,14 +2,13 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    types: [closed]
-    branches: [master]
+    branches: [master]  # ✅ only when master branch receives new code
+
+# Removed pull_request trigger completely
+# so it won't run when you open/merge PRs
 
 jobs:
   build-and-deploy:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
