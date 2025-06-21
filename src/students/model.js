@@ -73,3 +73,9 @@ export const getAllStudents = async() =>{
 export const getstudentById = async (id) => {
   return db.query('SELECT * FROM tbl_students WHERE id = $1', [id]);
 };
+
+export const StudentclassAssign = async (id, class_id) => {
+  const query = `UPDATE tbl_students SET class_id = $1 WHERE id = $2 RETURNING *`;
+  const values = [class_id, id]; // ✅ class_id first, then student_id
+  return db.query(query, values);
+};

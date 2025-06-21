@@ -1,5 +1,5 @@
 import express from 'express'
-import { deleteStudent, getAllStudent, getStudentById, login, signUp, update } from './controller.js';
+import { assignStudentToClass, deleteStudent, getAllStudent, getStudentById, login, signUp, update } from './controller.js';
 import { authorizeRoles, verifyToken } from '../middleware/auth.js';
 
 
@@ -15,6 +15,8 @@ app.delete('/deleteStudent',verifyToken,authorizeRoles("teacher"),deleteStudent)
 
 app.get('/get-Allstudents',verifyToken,authorizeRoles("teacher","admin"),getAllStudent)
 
-app.get('/get-Student-ById',getStudentById)
+app.get('/get-Student-ById',verifyToken,authorizeRoles("teacher","admin"),getStudentById)
+
+app.post('/assign-student-to-class',assignStudentToClass)
 
 export default app;
