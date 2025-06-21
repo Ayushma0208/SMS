@@ -9,7 +9,6 @@ const db = new Pool({
     rejectUnauthorized: false,
   },
 });
-// console.log("db>>>>>",db)
 
 db.connect()
   .then(() => console.log('Connected to PostgreSQL (Neon) database.'))
