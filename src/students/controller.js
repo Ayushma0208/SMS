@@ -1,5 +1,6 @@
 import argon2  from 'argon2';
 import { generateToken } from "../middleware/auth.js";
+import cloudinary from '../config/cloudinary.js';
 import { createUser, getAllStudents, getstudentById, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
 
 export const signUp = async (req, res) => {
@@ -61,18 +62,37 @@ export const update = async (req, res) => {
     const id = req.query.id;
     const { fullName, address, dob, phoneNumber, gender } = req.body;
 
-    const result = await updateStudent(fullName, address, dob, gender, phoneNumber, id);
+    let profileImage = null;
+
+    // Upload image if provided
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }).end(req.file.buffer);
+      });
+
+      profileImage = result.secure_url; // Store this in profile_image column
+    }
+
+    const result = await updateStudent(fullName, address, dob, gender, phoneNumber, profileImage, id);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ message: "User not found or no changes made" });
     }
 
-    return res.status(200).json({ message: "Profile updated successfully", user: result.rows[0] });
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: result.rows[0]
+    });
+
   } catch (error) {
     console.error("Update error:", error);
     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
   }
 };
+
 
 export const deleteStudent = async(req,res) =>{
     try {

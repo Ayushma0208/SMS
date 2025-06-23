@@ -19,44 +19,14 @@ export const createUser = async (data) => {
 };
 
 // Update student by ID
-export const updateStudent = async (fullName, address, dob, gender, phoneNumber, id) => {
-  const fields = [];
-  const values = [];
-  let index = 1;
-
-  if (fullName !== undefined) {
-    fields.push(`fullName = $${index++}`);
-    values.push(fullName);
-  }
-  if (address !== undefined) {
-    fields.push(`address = $${index++}`);
-    values.push(address);
-  }
-  if (dob !== undefined) {
-    fields.push(`dob = $${index++}`);
-    values.push(dob);
-  }
-  if (gender !== undefined) {
-    fields.push(`gender = $${index++}`);
-    values.push(gender);
-  }
-  if (phoneNumber !== undefined) {
-    fields.push(`phoneNumber = $${index++}`);
-    values.push(phoneNumber);
-  }
-
-  if (fields.length === 0) {
-    throw new Error("No fields to update");
-  }
-
-  values.push(id);
+export const updateStudent = async (fullName, address, dob, gender, phoneNumber, profileImage, id) => {
   const query = `
     UPDATE tbl_students 
-    SET ${fields.join(', ')} 
-    WHERE id = $${index}
-    RETURNING *;
-  `;
-
+    SET fullName = $1, address = $2, dob = $3, gender = $4, phoneNumber = $5, profile_image = $6, updated_at = NOW()
+    WHERE id = $7 RETURNING *`;
+    
+  const values = [fullName, address, dob, gender, phoneNumber, profileImage, id];
+  
   return db.query(query, values);
 };
 
