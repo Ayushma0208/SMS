@@ -1,4 +1,5 @@
 import argon2  from 'argon2';
+import { sendEmail } from "../utils/sendEmail.js"; 
 import { generateToken } from "../middleware/auth.js";
 import cloudinary from '../config/cloudinary.js';
 import { createUser, getAllStudents, getstudentById, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
@@ -12,7 +13,8 @@ export const signUp = async (req, res) => {
       return res.status(400).json({ message: "ACCOUNT ALREADY EXIST" });
     }
 
-    const hashedPassword = await argon2.hash(password); 
+    const hashedPassword = await argon2.hash(password);
+
     const user = {
       fullName,
       email,
@@ -24,7 +26,26 @@ export const signUp = async (req, res) => {
     };
 
     const response = await createUser(user);
-    return res.status(200).json({ message: "SIGNUP SUCCESSFULLY", user: response.rows[0] });
+    const createdUser = response.rows[0];
+
+    let emailSent = false;
+    try {
+      await sendEmail(
+        email,
+        "🎓 Welcome to School Management System",
+        `<h2>Hello ${fullName},</h2><p>Your registration was successful. Welcome to the school family!</p>`
+      );
+      emailSent = true;
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError.message);
+    }
+    console.log("sendEmail>>>>",sendEmail)
+
+    return res.status(200).json({
+      message: "SIGNUP SUCCESSFULLY",
+      emailSent,
+      user: createdUser,
+    });
   } catch (error) {
     console.error("Signup error:", error);
     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
@@ -64,7 +85,6 @@ export const update = async (req, res) => {
 
     let profileImage = null;
 
-    // Upload image if provided
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
@@ -73,7 +93,7 @@ export const update = async (req, res) => {
         }).end(req.file.buffer);
       });
 
-      profileImage = result.secure_url; // Store this in profile_image column
+      profileImage = result.secure_url;
     }
 
     const result = await updateStudent(fullName, address, dob, gender, phoneNumber, profileImage, id);
