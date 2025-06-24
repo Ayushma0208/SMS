@@ -9,23 +9,23 @@ export const isUserExist = async (email) => {
 
 // Create a new user (insert into table)
 export const createUser = async (data) => {
-    const { fullName, address, dob, gender, phoneNumber, email, password } = data;
+    const { fullname, address, dob, gender, phoneNumber, email, password } = data;
     const query = `
-        INSERT INTO tbl_students (fullName, address, dob, gender, phoneNumber, email, password)
+        INSERT INTO tbl_students (fullname, address, dob, gender, phoneNumber, email, password)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *`;
-    const values = [fullName, address, dob, gender, phoneNumber, email, password];
+    const values = [fullname, address, dob, gender, phoneNumber, email, password];
     return db.query(query, values);
 };
 
 // Update student by ID
-export const updateStudent = async (fullName, address, dob, gender, phoneNumber, profileImage, id) => {
+export const updateStudent = async (fullName, address, dob, gender, phoneNumber, profile_image, id) => {
   const query = `
     UPDATE tbl_students 
     SET fullName = $1, address = $2, dob = $3, gender = $4, phoneNumber = $5, profile_image = $6, updated_at = NOW()
     WHERE id = $7 RETURNING *`;
     
-  const values = [fullName, address, dob, gender, phoneNumber, profileImage, id];
+  const values = [fullName, address, dob, gender, phoneNumber, profile_image, id];
   
   return db.query(query, values);
 };
@@ -40,8 +40,9 @@ export const getAllStudents = async() =>{
   return db.query(`SELECT * FROM tbl_students`)
 }
 
-export const getstudentById = async (id) => {
-  return db.query('SELECT * FROM tbl_students WHERE id = $1', [id]);
+export const getstudentByIdModel = async (id) => {
+  const result = await db.query(`SELECT * FROM tbl_students WHERE id = $1`, [id]);
+  return result.rows[0];
 };
 
 export const StudentclassAssign = async (id, class_id) => {

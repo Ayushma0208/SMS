@@ -2,11 +2,11 @@ import argon2  from 'argon2';
 import { sendEmail } from "../utils/sendEmail.js"; 
 import { generateToken } from "../middleware/auth.js";
 import cloudinary from '../config/cloudinary.js';
-import { createUser, getAllStudents, getstudentById, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
+import { createUser, getAllStudents, getstudentByIdModel, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
 
 export const signUp = async (req, res) => {
   try {
-    const { fullName, email, address, dob, gender, phoneNumber, password } = req.body;
+    const { fullname, email, address, dob, gender, phoneNumber, password } = req.body;
 
     const result = await isUserExist(email);
     if (result.rows.length > 0) {
@@ -16,7 +16,7 @@ export const signUp = async (req, res) => {
     const hashedPassword = await argon2.hash(password);
 
     const user = {
-      fullName,
+      fullname,
       email,
       address,
       dob,
@@ -33,7 +33,7 @@ export const signUp = async (req, res) => {
       await sendEmail(
         email,
         "🎓 Welcome to School Management System",
-        `<h2>Hello ${fullName},</h2><p>Your registration was successful. Welcome to the school family!</p>`
+        `<h2>Hello ${fullname},</h2><p>Your registration was successful. Welcome to the school family!</p>`
       );
       emailSent = true;
     } catch (emailError) {
@@ -81,30 +81,40 @@ export const login = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const id = req.query.id;
-    const { fullName, address, dob, phoneNumber, gender } = req.body;
 
-    let profileImage = null;
-
-    if (req.file) {
-      const result = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }).end(req.file.buffer);
-      });
-
-      profileImage = result.secure_url;
+    // Step 1: Get the current user data
+    const existingStudent = await getstudentByIdModel(id);
+    if (!existingStudent) {
+      return res.status(404).json({ message: "Student not found" });
     }
 
-    const result = await updateStudent(fullName, address, dob, gender, phoneNumber, profileImage, id);
+    // Step 2: Extract from body or fallback to existing
+    const {
+      fullname = existingStudent.fullname,
+      address = existingStudent.address,
+      dob = existingStudent.dob,
+      phoneNumber = existingStudent.phoneNumber,
+      gender = existingStudent.gender,
+    } = req.body;
 
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: "User not found or no changes made" });
-    }
+    // Step 3: Handle profile image
+    let profile_image = existingStudent.profile_image;
+   if (req.file) {
+  const cloudinaryResult = await new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, uploadResult) => {
+      if (error) reject(error);
+      else resolve(uploadResult); // use different variable name
+    }).end(req.file.buffer);
+  });
+
+  profile_image = cloudinaryResult.secure_url;
+}
+    // Step 4: Update the student
+    const result = await updateStudent(fullname, address, dob, gender, phoneNumber, profile_image, id);
 
     return res.status(200).json({
       message: "Profile updated successfully",
-      user: result.rows[0]
+      user: result.rows[0],
     });
 
   } catch (error) {
@@ -144,7 +154,7 @@ export const getAllStudent = async(req,res) =>{
 export const getStudentById = async(req,res) =>{
   try {
     const id = req.query.id
-    const data =await getstudentById(id);
+    const data =await getstudentByIdModel(id);
     res.status(200).json(data.rows);
   } catch (error) {
     console.error('Error fetching students:', error);
