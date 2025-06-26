@@ -2,7 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const getQuizQuestions = async (req, res) => {
+export const getQuizQuestions = asygit nc (req, res) => {
   try {
     const { category = "code", difficulty = "Easy", limit = 5 } = req.query;
 
