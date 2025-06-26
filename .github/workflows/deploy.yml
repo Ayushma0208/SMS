@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [master]  # ✅ only when master branch receives new code
+    branches: [main]  # ✅ only when master branch receives new code
 
 # Removed pull_request trigger completely
 # so it won't run when you open/merge PRs
