@@ -26,8 +26,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sms_app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/sms_app:latest
 
       - name: Send email notification
         uses: dawidd6/action-send-mail@v3
