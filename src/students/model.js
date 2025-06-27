@@ -50,3 +50,8 @@ export const StudentclassAssign = async (id, class_id) => {
   const values = [class_id, id]; // ✅ class_id first, then student_id
   return db.query(query, values);
 };
+
+export const getGradesfromId = async(grade_id) =>{
+  const result = await db.query(`SELECT * FROM tbl_grades WHERE grade_id = $1`, [grade_id]);
+  return result.rows[0];
+}

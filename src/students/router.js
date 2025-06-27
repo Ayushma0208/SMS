@@ -1,5 +1,5 @@
 import express from 'express'
-import { assignStudentToClass, deleteStudent, getAllStudent, getStudentById, login, signUp, update } from './controller.js';
+import { assignStudentToClass, deleteStudent, getAllStudent, getGradesById, getStudentById, login, signUp, update } from './controller.js';
 import { authorizeRoles, verifyToken } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
 
@@ -20,5 +20,7 @@ app.get('/get-Allstudents',verifyToken,authorizeRoles("teacher","admin"),getAllS
 app.get('/get-Student-ById',verifyToken,authorizeRoles("teacher","admin"),getStudentById)
 
 app.post('/assign-student-to-class',assignStudentToClass)
+
+app.get('/get-grades-ById',getGradesById)
 
 export default app;

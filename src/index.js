@@ -6,6 +6,7 @@ import subjectRoutes from './subjects/router.js'
 import classRoutes from './class/router.js'
 import attendanceRoutes from './attendence/router.js'
 import quizRoutes from './quiz/router.js'
+import gradesRoutes from './grades/router.js'
 
 const router = express.Router();
 
@@ -22,5 +23,7 @@ router.use('/class',classRoutes)
 router.use('/attendance',attendanceRoutes)
 
 router.use('/quiz',quizRoutes);
+
+router.use('/grades',gradesRoutes)
 
 export default router;
