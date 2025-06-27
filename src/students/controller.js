@@ -2,7 +2,7 @@ import argon2  from 'argon2';
 import { sendEmail } from "../utils/sendEmail.js"; 
 import { generateToken } from "../middleware/auth.js";
 import cloudinary from '../config/cloudinary.js';
-import { createUser, getAllStudents, getstudentByIdModel, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
+import { createUser, getAllStudents, getGradesfromId, getstudentByIdModel, isUserExist, StudentclassAssign, studentDelete, updateStudent } from "./model.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -178,3 +178,18 @@ export const assignStudentToClass = async(req,res) =>{
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+export const getGradesById = async (req, res) => {
+  try {
+    const grade_id = parseInt(req.query.grade_id); // Extract from query
+    if (isNaN(grade_id)) {
+      return res.status(400).json({ message: "Invalid grade_id" });
+    }
+
+    const data = await getGradesfromId(grade_id);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching grade:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
