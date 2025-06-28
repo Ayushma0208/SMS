@@ -7,3 +7,11 @@ export const insertClass = async (classname) => {
     [classname]
   );
 };
+
+export const AssignTecherToClass = async(teacher_id,class_id) =>{
+  return db.query(
+    `INSERT INTO tbl_class_assign (teacher_id,class_id) VALUES ($1,$2)
+    RETURNING *;`,
+    [teacher_id,class_id]
+  )
+}
