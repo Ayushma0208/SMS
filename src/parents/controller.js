@@ -1,5 +1,5 @@
 import { generateToken } from "../middleware/auth.js";
-import { createParent, createParentStudentMapping, findParentByEmail, findParentStudentMapping, findStudentById } from "./model.js";
+import { createParent, createParentStudentMapping, findParentByEmail, findParentStudentMapping, findStudentById, getGradesForParent } from "./model.js";
 import argon2  from 'argon2';
 
 export const parentSignup = async (req, res) => {
@@ -68,5 +68,28 @@ export const parentLogin = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getParentGrades = async (req, res) => {
+  try {
+    const parentId = parseInt(req.query.parentId);
+
+    if (!parentId) {
+      return res.status(400).json({ message: 'Invalid parent ID' });
+    }
+
+    const grades = await getGradesForParent(parentId);
+
+    res.status(200).json({
+      success: true,
+      data: grades,
+    });
+  } catch (error) {
+    console.error('Error fetching grades for parent:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch grades',
+    });
   }
 };

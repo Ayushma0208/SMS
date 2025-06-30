@@ -42,41 +42,14 @@ export const createParentStudentMapping = async (parent_id, student_id) => {
   );
 };
 
-export const parentLogin = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Look up parent by email
-    const result = await findParentByEmail(email);
-
-    if (result.rowCount === 0) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    const parent = result.rows[0];
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, parent.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    // Generate token using your existing token util
-    const token = signToken({
-      userId: parent.id,
-      role: 'parent'
-    });
-
-    res.json({
-      message: 'Login successful',
-      token,
-      parent: {
-        id: parent.id,
-        fullname: parent.fullname
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
+export const getGradesForParent = async (parentId) => {
+  const query = `
+    SELECT g.grade_id, g.student_id, s.fullname AS student_name, g.subject, g.comments
+    FROM tbl_parents_students ps
+    JOIN tbl_students s ON ps.student_id = s.id
+    JOIN tbl_grades g ON g.student_id = s.id
+    WHERE ps.parent_id = $1
+  `;
+  const result = await db.query(query, [parentId]);
+  return result.rows;
 };
