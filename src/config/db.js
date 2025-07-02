@@ -15,3 +15,5 @@ db.connect()
   .catch(err => console.error('Database connection failed !!!', err));
 
 export default db;
+
+//just for testing puprose
