@@ -14,6 +14,5 @@ app.delete('/deleteTeacher',verifyToken,authorizeRoles("admin"),deleteTeacher)
 
 app.get('/get-allTeachers',verifyToken,authorizeRoles("admin"),getAllTeachers)
 
-//testing
 
 export default app;
