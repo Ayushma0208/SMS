@@ -14,7 +14,4 @@ app.delete('/deleteTeacher',verifyToken,authorizeRoles("admin"),deleteTeacher)
 
 app.get('/get-allTeachers',verifyToken,authorizeRoles("admin"),getAllTeachers)
 
-
-// testing for the cicd pipeline
-
 export default app;
