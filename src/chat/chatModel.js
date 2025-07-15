@@ -5,7 +5,7 @@ export const saveMessage = async (senderId, receiverId, message) => {
     `INSERT INTO tbl_messages (sender_id, receiver_id, message) VALUES ($1, $2, $3) RETURNING *`,
     [senderId, receiverId, message]
   );
-  return result.rows[0]; // full inserted message
+  return result.rows[0]; 
 };
 
 export const fetchMessages = async (user1, user2) => {
@@ -33,6 +33,3 @@ export const inboxModel = async(userId) =>{
   );
   return rows;
 }
-
-
-//testing
