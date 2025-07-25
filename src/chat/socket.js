@@ -1,14 +1,12 @@
 import { saveMessage, fetchMessages } from '../chat/chatModel.js';
 
-const connectedUsers = {}; // Stores userId: socketId
+const connectedUsers = {}; 
 
 export const socketHandler = (io) => {
   io.on('connection', (socket) => {
     console.log('🔌 New client connected:', socket.id);
 
-    // ✅ Register a user with their userId
    socket.on('register', (userId) => {
-  // If userId is object (mistakenly), extract actual ID 
   if (typeof userId === 'object' && userId.userId) {
     userId = userId.userId;
   }
