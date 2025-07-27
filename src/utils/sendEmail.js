@@ -18,7 +18,6 @@ const transporter = nodemailer.createTransport({
  * @param {string} html - Email HTML content
  */
 export const sendEmail = async (recipients, subject, html) => {
-  // Convert single email string to array
   const emails = Array.isArray(recipients) ? recipients : [recipients];
 
   for (const email of emails) {
@@ -35,8 +34,6 @@ export const sendEmail = async (recipients, subject, html) => {
     } catch (err) {
       console.error(`❌ Failed to send to ${email}:`, err.message);
     }
-
-    // Optional delay (to avoid SMTP provider limits)
-    await new Promise((resolve) => setTimeout(resolve, 200)); // 200ms delay
+    await new Promise((resolve) => setTimeout(resolve, 200)); 
   }
 };
