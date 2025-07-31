@@ -82,13 +82,11 @@ export const update = async (req, res) => {
   try {
     const id = req.query.id;
 
-    // Step 1: Get the current user data
     const existingStudent = await getstudentByIdModel(id);
     if (!existingStudent) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Step 2: Extract from body or fallback to existing
     const {
       fullname = existingStudent.fullname,
       address = existingStudent.address,
@@ -97,7 +95,6 @@ export const update = async (req, res) => {
       gender = existingStudent.gender,
     } = req.body;
 
-    // Step 3: Handle profile image
     let profile_image = existingStudent.profile_image;
    if (req.file) {
   const cloudinaryResult = await new Promise((resolve, reject) => {
@@ -109,7 +106,7 @@ export const update = async (req, res) => {
 
   profile_image = cloudinaryResult.secure_url;
 }
-    // Step 4: Update the student
+
     const result = await updateStudent(fullname, address, dob, gender, phoneNumber, profile_image, id);
 
     return res.status(200).json({
