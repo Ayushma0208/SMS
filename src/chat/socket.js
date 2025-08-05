@@ -17,7 +17,6 @@ export const socketHandler = (io) => {
 
 });
 
-    // ✅ Handle sending message from sender to receiver
     socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
       if (!senderId || !receiverId || !message) {
         return socket.emit('error', { message: 'Missing senderId, receiverId, or message' });
