@@ -6,7 +6,6 @@ export const isAdminExist = async (email) => {
     return db.query(query, values);
 };
 
-// Create a new user (insert into table)
 export const createUser = async (data) => {
     const { fullName, email, password } = data;
     const query = `
