@@ -47,7 +47,7 @@ export const getstudentByIdModel = async (id) => {
 
 export const StudentclassAssign = async (id, class_id) => {
   const query = `UPDATE tbl_students SET class_id = $1 WHERE id = $2 RETURNING *`;
-  const values = [class_id, id]; // ✅ class_id first, then student_id
+  const values = [class_id, id]; 
   return db.query(query, values);
 };
 
