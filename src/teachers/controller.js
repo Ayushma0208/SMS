@@ -78,5 +78,3 @@ export const getAllTeachers = async(req,res) =>{
   const data = await getAllTeacher();
   res.status(200).json(data.rows)
 }
-
-//testing2
