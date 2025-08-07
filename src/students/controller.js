@@ -52,7 +52,7 @@ export const signUp = async (req, res) => {
   }
 };
 
-// Login controller
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
   }
 };
 
-// Update profile controller
+
 export const update = async (req, res) => {
   try {
     const id = req.query.id;
@@ -178,7 +178,7 @@ export const assignStudentToClass = async(req,res) =>{
 
 export const getGradesById = async (req, res) => {
   try {
-    const grade_id = parseInt(req.query.grade_id); // Extract from query
+    const grade_id = parseInt(req.query.grade_id); 
     if (isNaN(grade_id)) {
       return res.status(400).json({ message: "Invalid grade_id" });
     }
