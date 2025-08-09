@@ -131,9 +131,8 @@ export const deleteStudent = async(req,res) =>{
         if (result.rowCount === 0) {
       return res.status(404).json({ message: "Student not found" });
     }
-       return res.status(200).json({ message: "Student deleted successfully" });
+      return res.status(200).json({ message: "Student deleted successfully" });
     } catch (error) {
-        console.error(error);
     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
     }
 }
@@ -162,13 +161,12 @@ export const getStudentById = async(req,res) =>{
 export const assignStudentToClass = async(req,res) =>{
   try {
     const id = req.body?.id;
-    console.log("id>>>>",id)
+    console.log("id>>>>>",id)
     const class_id = req.body?.class_id;
     const result = await StudentclassAssign(id,class_id);
     if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Student not found' });
     }
-
     res.status(200).json({ message: 'Student assigned to class successfully', student: result.rows[0] });
   } catch (error) {
     console.error('Error fetching students:', error);
@@ -185,7 +183,8 @@ export const getGradesById = async (req, res) => {
 
     const data = await getGradesfromId(grade_id);
     res.status(200).json(data);
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Error fetching grade:", error);
     res.status(500).json({ message: "Internal server error" });
   }
