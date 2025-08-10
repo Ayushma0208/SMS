@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AdminLogin, createUser, isAdminExist } from './model.js';
+import { AdminLogin, createUser, getAdminById, isAdminExist, updateAdminPassword } from './model.js';
 import argon2  from 'argon2';
 import { generateToken } from '../middleware/auth.js';
 
@@ -54,7 +54,7 @@ export const loginAdmin = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const adminId = req.user.id; // from auth middleware
+    const adminId = req.user.id; 
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -65,26 +65,21 @@ export const changePassword = async (req, res) => {
       return res.status(400).json({ message: "New passwords do not match" });
     }
 
-    // Fetch admin from DB
-    const admin = await AdminModel.getAdminById(adminId);
+    const admin = await getAdminById(adminId);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
 
-    // Compare old password
-    const isMatch = await bcrypt.compare(oldPassword, admin.password);
+    const isMatch = await argon2.verify(oldPassword, admin.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Old password is incorrect" });
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update in DB
-    await AdminModel.updateAdminPassword(adminId, hashedPassword);
+    await updateAdminPassword(adminId, hashedPassword);
 
-    res.json({ message: "Password changed successfully" });
-
+    return res.status(202).json ({ message: "Password changed successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
