@@ -1,10 +1,13 @@
 import express from 'express';
-import { loginAdmin, signUp } from './controller.js';
+import { changePassword, loginAdmin, signUp } from './controller.js';
+import { authorizeRoles, verifyToken } from '../middleware/auth.js';
 
 const app = express();
 
 app.post('/signup',signUp)
 
 app.post('/login',loginAdmin)
+
+app.post("/change-password", verifyToken,authorizeRoles("admin","teacher"), changePassword);
 
 export default app;

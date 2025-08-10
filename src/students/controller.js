@@ -100,7 +100,7 @@ export const update = async (req, res) => {
   const cloudinaryResult = await new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream({ resource_type: 'image' }, (error, uploadResult) => {
       if (error) reject(error);
-      else resolve(uploadResult); // use different variable name
+      else resolve(uploadResult); 
     }).end(req.file.buffer);
   });
 
