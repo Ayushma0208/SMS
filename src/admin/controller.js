@@ -52,4 +52,43 @@ export const loginAdmin = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    const adminId = req.user.id; // from auth middleware
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "New passwords do not match" });
+    }
+
+    // Fetch admin from DB
+    const admin = await AdminModel.getAdminById(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Compare old password
+    const isMatch = await bcrypt.compare(oldPassword, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Old password is incorrect" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update in DB
+    await AdminModel.updateAdminPassword(adminId, hashedPassword);
+
+    res.json({ message: "Password changed successfully" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
  

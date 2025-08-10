@@ -21,3 +21,12 @@ export const AdminLogin = async (email) => {
   const values = [email];
   return db.query(query, values);
 };
+
+exports.getAdminById = async (adminId) => {
+  const [rows] = await db.execute("SELECT password FROM tbl_admin WHERE id = ?", [adminId]);
+  return rows[0];
+};
+
+exports.updateAdminPassword = async (adminId, hashedPassword) => {
+  await db.execute("UPDATE tbl_admin SET password = ? WHERE id = ?", [hashedPassword, adminId]);
+};
