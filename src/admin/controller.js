@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AdminLogin, createUser, getAdminById, isAdminExist, updateAdminPassword } from './model.js';
+import { AdminLogin, createUser, findAdminById, getAdminById, isAdminExist, updateAdminPassword } from './model.js';
 import argon2  from 'argon2';
 import { generateToken } from '../middleware/auth.js';
 
@@ -88,7 +88,7 @@ export const changePassword = async (req, res) => {
 
 export const getAdminProfile = async (req, res) => {
   try {
-    const adminId = Number(req.params.id);
+    const adminId = req.query;
 
     if (isNaN(adminId)) {
       return res.status(400).json({ success: false, message: "Invalid Admin ID" });

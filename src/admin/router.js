@@ -1,5 +1,5 @@
 import express from 'express';
-import { changePassword, loginAdmin, signUp } from './controller.js';
+import { changePassword, getAdminProfile, loginAdmin, signUp } from './controller.js';
 import { authorizeRoles, verifyToken } from '../middleware/auth.js';
 
 const app = express();
