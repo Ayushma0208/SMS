@@ -30,3 +30,13 @@ export const getAdminById = async (adminId) => {
 export const updateAdminPassword = async (adminId, hashedPassword) => {
   await db.execute("UPDATE tbl_admin SET password = ? WHERE id = ?", [hashedPassword, adminId]);
 };
+
+export const findAdminById = async (adminId) => {
+  const query = `SELECT id, name, email, role, created_at 
+                 FROM tbl_admin 
+                 WHERE id = $1`;
+  const values = [adminId];
+  
+  const { rows } = await pool.query(query, values);
+  return rows[0]; // Return single admin
+};
