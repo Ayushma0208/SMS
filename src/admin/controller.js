@@ -89,17 +89,13 @@ export const changePassword = async (req, res) => {
 export const getAdminProfile = async (req, res) => {
   try {
     const adminId = req.query;
-
     if (isNaN(adminId)) {
       return res.status(400).json({ success: false, message: "Invalid Admin ID" });
     }
-
     const admin = await findAdminById(adminId);
-
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-
     return res.status(200).json({ success: true, data: admin });
   } catch (error) {
     console.error("Error fetching admin profile:", error);
