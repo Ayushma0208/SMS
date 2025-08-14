@@ -8,8 +8,8 @@ app.post('/signup',signUp)
 
 app.post('/login',loginAdmin)
 
-app.get("/admin", getAdminProfile);
+app.get("/admin",verifyToken,authorizeRoles("admin"), getAdminProfile);
 
-app.post("/change-password", verifyToken,authorizeRoles("admin","teacher"), changePassword);
+app.post("/change-password", verifyToken,authorizeRoles("admin"), changePassword);
 
 export default app;
