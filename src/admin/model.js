@@ -38,5 +38,5 @@ export const findAdminById = async (adminId) => {
   const values = [adminId];
   
   const { rows } = await pool.query(query, values);
-  return rows[0]; // Return single admin
+  return rows[0]; 
 };

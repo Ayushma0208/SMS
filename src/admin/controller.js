@@ -88,7 +88,7 @@ export const changePassword = async (req, res) => {
 
 export const getAdminProfile = async (req, res) => {
   try {
-    const adminId = req.query;
+    const adminId = req.user.id;
     if (isNaN(adminId)) {
       return res.status(400).json({ success: false, message: "Invalid Admin ID" });
     }
