@@ -40,3 +40,24 @@ export const findAdminById = async (adminId) => {
   const { rows } = await pool.query(query, values);
   return rows[0]; 
 };
+
+export const findByEmail = async (email) => {
+    const query = `
+        SELECT * FROM tbl_admin
+        WHERE email = $1
+    `;
+    const values = [email];
+    return db.query(query, values);
+};
+
+export const saveResetToken = async (adminId, token, expiry) => {
+    const query = `
+        UPDATE tbl_admin
+        SET reset_token = $1,
+            reset_token_expiry = $2
+        WHERE id = $3
+        RETURNING *
+    `;
+    const values = [token, expiry, adminId];
+    return db.query(query, values);
+};
