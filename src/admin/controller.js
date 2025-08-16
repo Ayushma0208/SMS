@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AdminLogin, createUser, findAdminById, getAdminById, isAdminExist, updateAdminPassword } from './model.js';
+import { AdminLogin, createUser, findAdminById, findByEmail, getAdminById, isAdminExist, saveResetToken, updateAdminPassword } from './model.js';
 import argon2  from 'argon2';
 import { generateToken } from '../middleware/auth.js';
 
@@ -100,6 +100,54 @@ export const getAdminProfile = async (req, res) => {
   } catch (error) {
     console.error("Error fetching admin profile:", error);
     res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // 1. Check if admin exists
+    const admin = await findByEmail(email);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // 2. Generate reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // valid 15 mins
+
+    // 3. Save token in DB
+    await saveResetToken(admin.id, resetToken, resetTokenExpiry);
+
+    // 4. Send reset link to email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Request",
+      html: `
+        <p>Hello ${admin.name},</p>
+        <p>You requested to reset your password.</p>
+        <p>Click <a href="${resetLink}">here</a> to reset it.</p>
+        <p>This link will expire in 15 minutes.</p>
+      `
+    });
+
+    res.json({ message: "Password reset link sent to your email" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { changePassword, getAdminProfile, loginAdmin, signUp } from './controller.js';
+import { changePassword, forgotPassword, getAdminProfile, loginAdmin, signUp } from './controller.js';
 import { authorizeRoles, verifyToken } from '../middleware/auth.js';
 
 const app = express();
@@ -12,4 +12,5 @@ app.get("/admin",verifyToken,authorizeRoles("admin"), getAdminProfile);
 
 app.post("/change-password", verifyToken,authorizeRoles("admin"), changePassword);
 
+app.post("/forgot-password", forgotPassword);
 export default app;
