@@ -108,17 +108,15 @@ export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    // 1. Check if admin exists
     const admin = await findByEmail(email);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
 
-    // 2. Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // valid 15 mins
+    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); 
 
-    // 3. Save token in DB
+
     await saveResetToken(admin.id, resetToken, resetTokenExpiry);
 
     // 4. Send reset link to email
