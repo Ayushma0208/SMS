@@ -61,3 +61,25 @@ export const saveResetToken = async (adminId, token, expiry) => {
     const values = [token, expiry, adminId];
     return db.query(query, values);
 };
+
+export const findByResetToken = async (token) => {
+  const query = `
+    SELECT * FROM tbl_admin
+    WHERE resetToken = $1
+  `;
+  const values = [token];
+  const result = await db.query(query, values);
+  return result.rows[0];  
+};
+
+export const updatePassword = async (id, hashedPassword) => {
+  const query = `
+    UPDATE tbl_admin
+    SET password = $1, resetToken = NULL, resetTokenExpiry = NULL
+    WHERE id = $2
+    RETURNING *
+  `;
+  const values = [hashedPassword, id];
+  const result = await db.query(query, values);
+  return result.rows[0];  
+};
