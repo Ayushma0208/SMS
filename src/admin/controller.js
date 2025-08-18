@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AdminLogin, createUser, findAdminById, findByEmail, getAdminById, isAdminExist, saveResetToken, updateAdminPassword } from './model.js';
+import { AdminLogin, createUser, findAdminById, findByEmail, findByResetToken, getAdminById, isAdminExist, saveResetToken, updateAdminPassword, updatePassword } from './model.js';
 import argon2  from 'argon2';
 import { generateToken } from '../middleware/auth.js';
 
@@ -119,7 +119,6 @@ export const forgotPassword = async (req, res) => {
 
     await saveResetToken(admin.id, resetToken, resetTokenExpiry);
 
-    // 4. Send reset link to email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -140,9 +139,7 @@ export const forgotPassword = async (req, res) => {
         <p>This link will expire in 15 minutes.</p>
       `
     });
-
-    res.json({ message: "Password reset link sent to your email" });
-
+    return res.json({ message: "Password reset link sent to your email" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -157,8 +154,6 @@ export const resetPassword = async (req, res) => {
     if (!token || !newPassword) {
       return res.status(400).json({ message: "Token and new password required" });
     }
-
-    
     const admin = await findByResetToken(token);
     if (!admin) {
       return res.status(400).json({ message: "Invalid or expired token" });
@@ -174,8 +169,7 @@ export const resetPassword = async (req, res) => {
 
     await updatePassword(admin.id, hashedPassword);
 
-    res.json({ message: "Password reset successful" });
-
+    return res.json({ message: "Password reset successful" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
