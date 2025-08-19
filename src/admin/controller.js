@@ -162,11 +162,7 @@ export const resetPassword = async (req, res) => {
     if (admin.resetTokenExpiry < new Date()) {
       return res.status(400).json({ message: "Reset token has expired" });
     }
-
-    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-
     await updatePassword(admin.id, hashedPassword);
 
     return res.json({ message: "Password reset successful" });
