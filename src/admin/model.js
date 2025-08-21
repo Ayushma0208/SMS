@@ -69,7 +69,7 @@ export const findByResetToken = async (token) => {
   `;
   const values = [token];
   const result = await db.query(query, values);
-  return result.rows[0];  
+  return result.rows[0];
 };
 
 export const updatePassword = async (id, hashedPassword) => {
