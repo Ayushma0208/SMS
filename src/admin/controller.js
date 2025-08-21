@@ -74,11 +74,8 @@ export const changePassword = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Old password is incorrect" });
     }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     await updateAdminPassword(adminId, hashedPassword);
-
     return res.status(202).json ({ message: "Password changed successfully" });
   } catch (error) {
     console.error(error);
