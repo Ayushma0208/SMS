@@ -10,7 +10,7 @@ export const signUp = async (req, res) => {
 
     const result = await isAdminExist(email);
     if (result.rows.length > 0) {
-      return res.status(400).json({ message: "ACCOUNT ALREADY EXIST" });
+      return res.status(402).json({ message: "ACCOUNT ALREADY EXIST" });
     }
 
     const hashedPassword = await argon2.hash(password);
@@ -34,7 +34,7 @@ export const loginAdmin = async (req, res) => {
     const result = await AdminLogin(email);
 
     if (!result || result.rows.length === 0) {
-      return res.status(400).json({ message: "USER NOT FOUND" });
+      return res.status(402).json({ message: "USER NOT FOUND" });
     }
 
     const user = result.rows[0];
@@ -58,7 +58,7 @@ export const changePassword = async (req, res) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
     if (!oldPassword || !newPassword || !confirmPassword) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(402).json({ message: "All fields are required" });
     }
 
     if (newPassword !== confirmPassword) {
@@ -87,13 +87,13 @@ export const getAdminProfile = async (req, res) => {
   try {
     const adminId = req.user.id;
     if (isNaN(adminId)) {
-      return res.status(400).json({ success: false, message: "Invalid Admin ID" });
+      return res.status(402).json({ success: false, message: "Invalid Admin ID" });
     }
     const admin = await findAdminById(adminId);
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-    return res.status(200).json({ success: true, data: admin });
+    return res.status(201).json({ success: true, data: admin });
   } catch (error) {
     console.error("Error fetching admin profile:", error);
     res.status(500).json({ success: false, message: "Server Error" });
