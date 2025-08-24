@@ -7,12 +7,10 @@ import { generateToken } from '../middleware/auth.js';
 export const signUp = async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
-
     const result = await isAdminExist(email);
     if (result.rows.length > 0) {
       return res.status(402).json({ message: "ACCOUNT ALREADY EXIST" });
     }
-
     const hashedPassword = await argon2.hash(password);
     const user = {
       fullName,
