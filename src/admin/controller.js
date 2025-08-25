@@ -111,7 +111,6 @@ export const forgotPassword = async (req, res) => {
     const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); 
 
-
     await saveResetToken(admin.id, resetToken, resetTokenExpiry);
 
     const transporter = nodemailer.createTransport({
@@ -163,7 +162,7 @@ export const resetPassword = async (req, res) => {
     return res.json({ message: "Password reset successful" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(501).json({ message: "Server error" });
   }
 };
 
