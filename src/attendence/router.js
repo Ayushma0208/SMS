@@ -7,6 +7,5 @@ const app = express();
 
 app.post('/student-attendence',verifyToken,authorizeRoles("admin","teacher"),markStudentAttendance)
 
-//testing 2 in development
 
 export default app;
