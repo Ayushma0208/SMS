@@ -36,5 +36,5 @@ jobs:
           subject: "Code is deployed"
           body: |
             The latest code was successfully deployed from the master branch.
-          to: ayushmatripathi2002@gmail.com
+          to: ayushmatripathi0208@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
