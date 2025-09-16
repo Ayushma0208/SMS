@@ -36,10 +36,8 @@ export const socketHandler = (io) => {
 
         console.log(`📤 Message from ${senderId} to ${receiverId}`);
 
-        // Emit to sender (confirmation)
         socket.emit('newMessage', msg);
 
-        // Emit to receiver if they're connected
         const receiverSocketId = connectedUsers[receiverId];
         if (receiverSocketId) {
           io.to(receiverSocketId).emit('newMessage', msg);
@@ -53,7 +51,6 @@ export const socketHandler = (io) => {
       }
     });
 
-    // ✅ Fetch all previous messages between two users
     socket.on('getMessages', async ({ user1, user2 }) => {
       if (!user1 || !user2) {
         return socket.emit('error', { message: 'Missing user1 or user2' });
@@ -81,3 +78,6 @@ export const socketHandler = (io) => {
     });
   });
 };
+
+
+//eifdjeiofjoiefj
