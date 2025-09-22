@@ -144,7 +144,6 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
-
     if (!token || !newPassword) {
       return res.status(400).json({ message: "Token and new password required" });
     }
@@ -152,13 +151,11 @@ export const resetPassword = async (req, res) => {
     if (!admin) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
-
     if (admin.resetTokenExpiry < new Date()) {
       return res.status(400).json({ message: "Reset token has expired" });
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await updatePassword(admin.id, hashedPassword);
-
     return res.json({ message: "Password reset successful" });
   } catch (err) {
     console.error(err);
