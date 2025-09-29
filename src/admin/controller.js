@@ -17,7 +17,6 @@ export const signUp = async (req, res) => {
       email,
       password: hashedPassword,
     };
-
     const response = await createUser(user);
     return res.status(200).json({ message: "SIGNUP SUCCESSFULLY", user: response.rows[0] });
   } catch (error) {
@@ -30,20 +29,16 @@ export const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const result = await AdminLogin(email);
-
     if (!result || result.rows.length === 0) {
       return res.status(402).json({ message: "USER NOT FOUND" });
     }
-
     const user = result.rows[0];
     const isMatch = await argon2.verify(user.password, password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
-
     const token = generateToken(user);
     return res.status(200).json({ message: "Login Successfully", token });
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -57,7 +52,6 @@ export const changePassword = async (req, res) => {
     if (!oldPassword || !newPassword || !confirmPassword) {
       return res.status(402).json({ message: "All fields are required" });
     }
-
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "New passwords do not match" });
     }

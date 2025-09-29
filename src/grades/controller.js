@@ -4,7 +4,6 @@ export const addGrades = async(req,res) =>{
     try {
     const{student_id,teacher_id,subject, grade, comments} = req.body;
      const existing = await checkExistingGrade(student_id, teacher_id, subject);
-
     if (existing.rows.length > 0) {
       return res.status(400).json({
         message: "Grade for this student, teacher, and subject already exists.",
