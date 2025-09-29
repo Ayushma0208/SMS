@@ -54,7 +54,6 @@ export const changePassword = async (req, res) => {
   try {
     const adminId = req.user.id; 
     const { oldPassword, newPassword, confirmPassword } = req.body;
-
     if (!oldPassword || !newPassword || !confirmPassword) {
       return res.status(402).json({ message: "All fields are required" });
     }
@@ -62,12 +61,10 @@ export const changePassword = async (req, res) => {
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "New passwords do not match" });
     }
-
     const admin = await getAdminById(adminId);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
-
     const isMatch = await argon2.verify(oldPassword, admin.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Old password is incorrect" });
